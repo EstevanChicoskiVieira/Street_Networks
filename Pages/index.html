@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Street Networks</title>
+    <link rel="stylesheet" href="../Assets/Css/style.css">
+    <style>
+        input:focus,
+        input:active {
+            outline: none;
+            box-shadow: none;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header"> <!--Cabeçalho do site-->
+        <div class="logo"> <!--Logo do site vai dentro desta divisão-->
+            <a href="/">
+                <img src="../Assets/Imgs/logo1.png" width="175px" alt="Street Networks Logo">
+            </a>
+        </div>
+        <div class="navegation">
+            <nav> <!--Navegação do site-->
+                <a style="color: #000;" href="#">Fazer Login</a>
+                <a style="color: #000;" href="#">Contato</a>
+                <a style="color: #000;" href="https://github.com/EstevanChicoskiVieira">GitHub</a>
+                <a style="color: #000;" href="/Pages/">Reportar informações</a>
+            </nav>
+        </div>
+    </header>
+    <main class="main-2">
+        <div class="main2-div1">
+            
+            <div id="map" style="width: 600px; height: 450px;"></div>
+        </div>
+        <div class="main2-div2">
+            <form action="">
+                <input type="text" placeholder="Seu nome completo">
+                <p>Descreva o seu problema:</p>
+                <textarea placeholder="Descreva seu problema" name="problema" id="problema" cols="30"
+                    rows="10"></textarea>
+                <input type="text" id="loc" placeholder="Localização do problema">
+                <input type="submit" value="Relatar">
+            </form>
+        </div>
+    </main>
+    <script>
+        const locInput = document.getElementById('loc');
+
+        function fillLocationData(address, coordinates) {
+            locInput.value = `${address} - Latitude: ${coordinates.lat}, Longitude: ${coordinates.lng}`;
+        }
+
+        function initMap() {
+            const map = new google.maps.Map(document.getElementById('map'), {
+                center: {
+                    lat: -25.391338299771867,
+                    lng: -51.512130581722815
+                },
+                zoom: 15
+            });
+
+            map.addListener('click', (event) => {
+                //alert("teste de click")
+                const clickedLocation = event.latLng;
+                const geocoder = new google.maps.Geocoder();
+                geocoder.geocode({
+                    location: clickedLocation
+                }, (results, status) => {
+                    if (status === 'OK' && results[0]) {
+                        const address = results[0].formatted_address;
+                        const coordinates = {
+                            lat: clickedLocation.lat(),
+                            lng: clickedLocation.lng()
+                        };
+                        fillLocationData(address, coordinates);
+                    }
+                });
+            });
+        }
+    </script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDNmGQOXiSVIIweGLTmmmpxGzcprKw8Acw&callback=initMap">
+    </script>
+</body>
+
+</html>
